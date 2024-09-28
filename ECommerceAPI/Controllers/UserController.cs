@@ -65,9 +65,9 @@ public class UserController : ControllerBase
 
         User user = _mapper.Map<User>(model);
 
-        var clientRole = await _context.Roles.FirstOrDefaultAsync(x => x.Name == "client");
+        var clientRole = await _context.Roles.FirstOrDefaultAsync(x => x.Name == "Client");
         if (clientRole == null)
-            return NotFound(new { message = "Função padrão 'Client' não encontrada" });
+            return NotFound();
 
         user.RoleId = clientRole.Id;
         user.Role = clientRole;
