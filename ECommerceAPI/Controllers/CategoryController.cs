@@ -60,11 +60,18 @@ public class CategoryController : ControllerBase
     [Authorize(Roles = "manager")]
     public async Task<IActionResult> AddCategory([FromBody] CategoryDtoCreate categoryDto)
     {
-        Category category = _mapper.Map<Category>(categoryDto);
-        await _context.Categories.AddAsync(category);
-        await _context.SaveChangesAsync();
-        var categoryToRead = _mapper.Map<CategoryDtoRead>(category);
-        return CreatedAtAction(nameof(GetCategoryById), new { id = categoryToRead.Id }, categoryToRead);
+        try
+        {
+            Category category = _mapper.Map<Category>(categoryDto);
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+            var categoryToRead = _mapper.Map<CategoryDtoRead>(category);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryToRead.Id }, categoryToRead);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>

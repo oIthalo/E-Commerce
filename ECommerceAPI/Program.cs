@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,9 +25,8 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-var key = Encoding.ASCII.GetBytes(secretKey);
-builder.Services
-    .AddAuthentication(x =>
+var key = Encoding.ASCII.GetBytes(secretKey!);
+builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -40,14 +40,22 @@ builder.Services
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
         ValidateAudience = false,
+        RoleClaimType = ClaimTypes.Role
     };
 });
 
 builder.Services
     .AddAuthorization(opts =>
     {
-        opts.AddPolicy("manager", policy => policy.RequireRole("manager"));
-    });
+        opts.AddPolicy("manager", policy => policy
+            .RequireAssertion(context => 
+            context.User.HasClaim(c => c.Type == ClaimTypes.Role &&
+            string.Equals(c.Value, "manager", 
+            StringComparison.OrdinalIgnoreCase)
+            )
+        )
+    );
+});
 
 var connectionString = builder.Configuration
     .GetConnectionString("ECommerceConnection");

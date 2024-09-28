@@ -19,13 +19,12 @@ public static class TokenService
         var handler = new JwtSecurityTokenHandler();
         var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
 
-        var userRole = user.Role?.ToString() ?? "default";
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, userRole)
+                new Claim(ClaimTypes.Role, user.Role.Name!.ToLower())
             }),
             SigningCredentials = credentials,
             Expires = DateTime.UtcNow.AddHours(2),

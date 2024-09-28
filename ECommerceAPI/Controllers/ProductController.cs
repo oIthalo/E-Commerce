@@ -56,7 +56,7 @@ public class ProductController : ControllerBase
     /// <param name="productDto">Dados do produto a ser criado</param>
     /// <returns>IActionResult</returns>
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "seller")]
     public async Task<IActionResult> AddProduct([FromBody] ProductDtoCreate productDto)
     {
         Product product = _mapper.Map<Product>(productDto);
@@ -79,7 +79,7 @@ public class ProductController : ControllerBase
     /// <param name="productDto">Dados atualizados do produto</param>
     /// <returns>IActionResult</returns>
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Roles = "seller")]
     public async Task<IActionResult> UpdateProduct(Guid id, ProductDtoUpdate productDto)
     {
         var productToUpdate = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id.Equals(id));
@@ -97,7 +97,7 @@ public class ProductController : ControllerBase
     /// <param name="patch">Documento JSON Patch com as alterações</param>
     /// <returns>IActionResult</returns>
     [HttpPatch("{id}")]
-    [Authorize]
+    [Authorize(Roles = "seller")]
     public async Task<IActionResult> UpdateProductPatch(Guid id, JsonPatchDocument<ProductDtoUpdate> patch)
     {
         var product = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id.Equals(id));
