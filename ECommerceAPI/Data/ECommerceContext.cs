@@ -11,6 +11,4 @@ public class ECommerceContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<CartItem> CartItems { get; set; }
-    public DbSet<CartHeader> CartHeaders { get; set; }
 }

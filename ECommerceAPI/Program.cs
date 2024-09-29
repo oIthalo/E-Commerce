@@ -13,7 +13,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddSwaggerGen(c =>
 {
