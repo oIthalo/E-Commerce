@@ -10,7 +10,8 @@ public class UserProfile : Profile
         CreateMap<User, UserDtoRegister>();
         CreateMap<UserDtoRegister, User>();
         CreateMap<UserDtoRead, User>();
-        CreateMap<User, UserDtoRead>().ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.Name));;
+        CreateMap<User, UserDtoRead>().ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name));;
         CreateMap<User, UserDtoLogin>();
+        CreateMap<UserDtoUpdate, User>().ReverseMap();
     }
 }

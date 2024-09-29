@@ -21,6 +21,7 @@ public class User
     [Required(ErrorMessage = "A senha é obrigatória.")]
     [MinLength(8, ErrorMessage = "A senha deve ter pelo menos 8 caracteres.")]
     [StringLength(100, ErrorMessage = "A senha deve ter no máximo 100 caracteres.")]
+    [DataType(DataType.Password)]
     public string Password { get; set; }
 
     [Required(ErrorMessage = "O RoleId é obrigatório.")]

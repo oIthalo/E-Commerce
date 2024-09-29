@@ -32,6 +32,11 @@ public class UserController : ControllerBase
     public async Task<IEnumerable<UserDtoRead>> GetUsers()
     {
         var users = await _context.Users.ToListAsync();
+        foreach (var user in users)
+        {
+            var role = _context.Roles.FirstOrDefault(x => x.Id.Equals(user.RoleId));
+            user.Role.Name = role.Name;
+        }
         return _mapper.Map<IEnumerable<UserDtoRead>>(users);
     }
 
@@ -46,6 +51,9 @@ public class UserController : ControllerBase
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
         if (user is null) return NotFound();
+
+        var role = _context.Roles.FirstOrDefault(x => x.Id.Equals(user.RoleId));
+        user.Role.Name = role.Name;
 
         var userDto = _mapper.Map<UserDtoRead>(user);
         return Ok(userDto);
@@ -108,7 +116,7 @@ public class UserController : ControllerBase
 
         var role = await _context.Roles.FirstOrDefaultAsync(x => x.Id.Equals(user.RoleId));
         if (role == null)
-            return NotFound(new { message = "Função não encontrada" });
+            return NotFound();
         user.Role = role;
 
         var token = TokenService.GenerateToken(user);
