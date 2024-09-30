@@ -13,6 +13,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<CartService>();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -39,7 +40,6 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
         ValidateAudience = false,
-        RoleClaimType = ClaimTypes.Role
     };
 });
 

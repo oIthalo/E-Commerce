@@ -29,7 +29,7 @@ public class ProductController : ControllerBase
     /// <param name="take">Número de produtos a retornar</param>
     /// <returns>Lista de produtos</returns>
     [HttpGet]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<IEnumerable<ProductDtoRead>> GetProducts([FromQuery] int skip = 0, [FromQuery] int take = 100)
     {
         var products = await _context.Products.Include(x => x.Category).Skip(skip).Take(take).ToListAsync();
@@ -42,7 +42,7 @@ public class ProductController : ControllerBase
     /// <param name="id">ID do produto</param>
     /// <returns>IActionResult</returns>
     [HttpGet("{id}")]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<IActionResult> GetProductById(Guid id)
     {
         var product = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id.Equals(id));

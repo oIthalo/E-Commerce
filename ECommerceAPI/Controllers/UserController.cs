@@ -80,10 +80,20 @@ public class UserController : ControllerBase
         user.RoleId = clientRole.Id;
         user.Role = clientRole;
 
+
         try
         {
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
+
+            CartHeader cartHeader = new CartHeader
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+            };
+            await _context.CartHeaders.AddAsync(cartHeader);
+            await _context.SaveChangesAsync();
+
             var userDto = _mapper.Map<UserDtoRead>(user);
             return Ok(userDto);
         }
@@ -180,7 +190,11 @@ public class UserController : ControllerBase
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
         if (user is null) return NotFound();
+
+        var cartHeader = await _context.CartHeaders.FirstOrDefaultAsync(x => x.UserId.Equals(user.Id));
+
         _context.Users.Remove(user);
+        _context.CartHeaders.Remove(cartHeader);
         await _context.SaveChangesAsync();
         return NoContent();
     }
